@@ -1,0 +1,26 @@
+1. Main website
+http://www.openbeacon.org/OpenBeacon_Tag
+
+2. FAQ of the website
+http://www.openbeacon.org/Frequently_Asked_Questions
+
+3. Firmware to reprogram PIC controller
+http://www.openbeacon.org/Microchip_Processor
+
+4. Website of original company 
+http://www.bitmanufactory.com/bluetooth-smart-beacon/
+
+5. GIT repository for firmware code and hardware
+https://github.com/meriac/openbeacon-ng
+https://github.com/meriac/openbeacon-ng/tree/master/hardware
+https://github.com/meriac/openbeacon/tree/master/firmware/pic16/tag-proximity
+
+6. The OpenBeacon tag use in a conference for proximity
+http://www.sociopatterns.org/gallery/
+
+7. Blogs with information about use of tags
+http://www.ns-tech.co.uk/blog/2010/02/active-rfid-tracking-system/
+http://amal.net/?p=247
+
+8. Price list for tags
+http://www.openbeacon.org/OpenPCD_and_OpenBeacon_Webshop
