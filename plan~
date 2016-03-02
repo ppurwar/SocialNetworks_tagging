@@ -1,0 +1,18 @@
+Components :
+
+1. Tag - RFID, MicroController + R/L/C
+PCB layout - a. Time taken for printing b. components ordering and soldering ?
+
+2. Reader - buy it. Firmware support 
+	a. SD card 
+	b. Ethernet
+3. Server setup
+
+
+Hardware And Software
+
+Firmware : 
+
+1. Programming of tag
+2. Communication with reader (reader firmware)
+3. Data collection
