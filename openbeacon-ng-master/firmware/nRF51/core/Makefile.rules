@@ -1,0 +1,148 @@
+CROSS=arm-none-eabi-
+CC=$(CROSS)gcc
+CXX=$(CROSS)g++
+LD=$(CROSS)ld
+OBJCOPY=$(CROSS)objcopy
+OBJDUMP=$(CROSS)objdump
+AR=$(CROSS)ar
+LDSCRIPT=$(CORE)linker/$(CPU)_$(VARIANT).ld
+SEGGER=
+JLINK=$(SEGGER)JLinkExe
+JLINK_OPT=-if swd -device $(CPU)_$(VARIANT)
+
+# determine program version
+PROGRAM_VERSION:=$(shell git describe --tags --abbrev=4 --dirty 2>/dev/null | sed s/^v//)
+ifeq ("$(PROGRAM_VERSION)","")
+    PROGRAM_VERSION:='unknown'
+endif
+
+ifeq ("$(wildcard $(JLINK))","")
+    JLINK=JLinkExe
+endif
+
+CORE=../core/
+
+#
+# CFLAGS common to both the THUMB and ARM mode builds, C and C++
+#
+COMMON_CFLAGS= \
+-D __$(CPU)__ \
+-D __$(ARCH)__ \
+-D PROGRAM_VERSION=\"$(PROGRAM_VERSION)\" \
+-D PROGRAM_NAME=\"$(TARGET)\" \
+-I$(CORE)cmsis \
+-I$(CORE)nrf/inc \
+-I$(CORE)startup/inc \
+-I$(CORE)openbeacon/inc \
+-Wall \
+-Werror \
+-Wextra  \
+-Wno-multichar \
+-Wno-strict-aliasing  \
+-D CORTEXM0_GCC  \
+-mcpu=cortex-m0 \
+-msoft-float \
+-mthumb \
+-fno-common \
+$(DEBUG)  \
+$(OPTIM) \
+-fomit-frame-pointer \
+-ffunction-sections \
+-fdata-sections \
+$(APP_COMMON_CFLAGS)
+
+CFLAGS=$(COMMON_CFLAGS) \
+-Wstrict-prototypes  \
+$(APP_CFLAGS)
+
+CXXFLAGS=$(COMMON_CFLAGS) \
+$(APP_CXXFLAGS)
+
+LINKER_FLAGS=$(APP_LDFLAGS) -Xlinker --gc-sections -Xlinker -o$(TARGET).elf -Xlinker -M -Xlinker -Map=$(TARGET).map -T$(LDSCRIPT)
+
+ARM_SRC= \
+  $(APP_SRC) \
+  $(CORE)startup/src/$(ARCH).c \
+  $(CORE)nrf/src/system_$(ARCH).c \
+  $(CORE)openbeacon/src/crc32.c \
+  $(CORE)openbeacon/src/crc16.c \
+  $(CORE)openbeacon/src/crc8.c \
+  $(CORE)openbeacon/src/helper.c \
+  $(CORE)openbeacon/src/debug_printf.c \
+  $(CORE)openbeacon/src/printf.c \
+  $(CORE)openbeacon/src/uart.c \
+  $(CORE)openbeacon/src/xxtea.c
+
+#
+# JLink flash script
+#
+define TARGET_FLASH
+	si 1
+	device $(CPU)_$(VARIANT)
+	rx 100
+	halt
+	w4 4001e504 1
+	erase
+	sleep 1000
+	loadbin $(TARGET).bin 0
+	rx 100
+	g
+	exit
+endef
+export TARGET_FLASH
+
+define TARGET_ERASE
+	r
+	si 1
+	device $(CPU)_$(VARIANT)
+	w4 4001e504 2
+	w4 4001e50c 1
+	w4 4001e514 1
+	r
+	exit
+endef
+export TARGET_ERASE
+
+#
+# Define all object files.
+#
+ARM_SRC_C   := $(filter %.c,$(ARM_SRC))
+ARM_OBJ_C   := $(ARM_SRC_C:.c=.o)
+ARM_SRC_S   := $(filter %.s,$(ARM_SRC))
+ARM_OBJ_S   := $(ARM_SRC_S:.s=.o)
+ARM_SRC_CPP := $(filter %.cpp,$(ARM_SRC))
+ARM_OBJ_CPP := $(ARM_SRC_CPP:.cpp=.o)
+ARM_OBJ     := $(ARM_OBJ_S) $(ARM_OBJ_C) $(ARM_OBJ_CPP)
+APP_ADDITIONAL?=
+
+$(TARGET).bin : $(TARGET).elf
+	$(OBJCOPY) $(TARGET).elf -O binary $(TARGET).bin
+
+$(TARGET).hex : $(TARGET).elf
+	$(OBJCOPY) $(TARGET).elf -O ihex $(TARGET).hex
+
+$(TARGET).elf : $(ARM_OBJ) $(CRT0) $(BOOTLOADER) $(APP_ADDITIONAL) $(LDSCRIPT)
+	$(CC) $(CFLAGS) $(ARM_OBJ) $(BOOTLOADER) $(APP_ADDITIONAL) -nostartfiles $(CRT0) $(LINKER_FLAGS)
+	$(OBJDUMP) -d $(TARGET).elf > $(TARGET).asm
+
+$(ARM_OBJ_C) : %.o : %.c
+	$(CC) -c $(CFLAGS) $< -o $@
+
+$(ARM_OBJ_S) : %.o : %.s
+	$(CC) -c $(CFLAGS) $< -o $@
+
+$(ARM_OBJ_CPP) : %.o : %.cpp
+	$(CXX) -c $(CXXFLAGS) $< -o $@
+
+flash: $(TARGET).bin
+	@echo "$$TARGET_FLASH" | $(JLINK) $(JLINK_OPT)
+
+erase:
+	@echo "$$TARGET_ERASE" | $(JLINK) $(JLINK_OPT)
+
+version:
+	@echo "$(TARGET) version $(PROGRAM_VERSION)"
+
+clean : app_clean
+	find $(CORE) -name '*.o' -exec rm \{\} \;
+	rm -f $(TARGET).bin $(TARGET).elf $(TARGET).map $(TARGET).asm $(TARGET)-$(CPU).bin JLink.log
