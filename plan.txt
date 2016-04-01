@@ -1,3 +1,19 @@
+23.03.2016
+
+Program the tags first.
+
+1. Round one vs Square one ....
+2. check for feasibility of firmware....
+
+
+18.03.2016
+
+1. Soldering is bottleneck
+2. Order for 5 tags
+3. Figure out the details for PCB and components with Alphonso.
+
+
+
 02.03.2016
 
 PCB printout-
