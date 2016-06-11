@@ -33,6 +33,10 @@ typedef struct
 #define IPv4(a,b,c,d) ( ((uint32_t)a)<<24 | ((uint32_t)b)<<16 | ((uint32_t)c)<<8 | ((uint32_t)d)<<0 )
 
 static const TReaderItem g_ReaderList[] = {
+    
+    // PPCHG - CLU E1.6
+	{1298, 5, 8, 8, 855, 522},
+	{1267, 4, 5, 8, 855, 522},
 
 	// Mikes Lab: group 8
 	{1020, 1, 1, 8, 855, 522},
