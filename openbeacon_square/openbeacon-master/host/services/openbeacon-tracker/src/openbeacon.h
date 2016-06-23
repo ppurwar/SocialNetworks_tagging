@@ -42,11 +42,10 @@
 #define RFBPROTO_PROXREPORT_EXT         70
 
 #define PROX_MAX 4
-#define PROX_TAG_ID_BITS 12
+#define PROX_TAG_ID_BITS 13 //kchaita1 - no of tag id bits 
 #define PROX_TAG_COUNT_BITS 2
 #define PROX_TAG_STRENGTH_BITS 2
-#define PROX_TAG_ID_MASK 0x1FFF
-//#define PROX_TAG_ID_MASK ((1<<PROX_TAG_ID_BITS)-1) -- kchaita1 changed
+#define PROX_TAG_ID_MASK ((1<<PROX_TAG_ID_BITS)-1) 
 #define PROX_TAG_COUNT_MASK ((1<<PROX_TAG_COUNT_BITS)-1)
 #define PROX_TAG_STRENGTH_MASK ((1<<PROX_TAG_STRENGTH_BITS)-1)
 

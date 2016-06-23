@@ -683,7 +683,7 @@ parse_packet (double timestamp, uint32_t reader_id, const void *data, int len,
     TAggregation *aggregation;
     uint32_t tag_id, tag_flags, tag_sequence;
     uint32_t delta_t, t, tag_sighting;
-    uint16_t prox_tag_id, prox_tag_count, prox_tag_strength;
+    uint16_t prox_tag_id, prox_tag_id_tmp,prox_tag_count, prox_tag_strength;
     pthread_mutex_t *item_mutex, *tag_mutex;
     int tag_strength, j, key_id, res;
     TBeaconEnvelope env;
@@ -1019,6 +1019,11 @@ parse_packet (double timestamp, uint32_t reader_id, const void *data, int len,
                     for (j = 0; j < PROX_MAX; j++)
                     {
                         tag_sighting = ntohs (env.pkt.p.prox.oid_prox[j]);
+                        prox_tag_id_tmp = tag_sighting & PROX_TAG_ID_MASK;
+                        if (prox_tag_id_tmp < 0x1F40) //kchaita1 - modified to fix the tag sighting error 
+                        {
+                            tag_sighting = 0;
+                        }
                         if (tag_sighting)
                         {
                             prox_tag_id = tag_sighting & PROX_TAG_ID_MASK;
@@ -1038,12 +1043,6 @@ parse_packet (double timestamp, uint32_t reader_id, const void *data, int len,
                 tag->sequence = tag_sequence;
 
                 pthread_mutex_unlock (tag_mutex);
-#if 1 //def DEBUG
-                fprintf (stderr,
-                         "Prateek - tag:%04u [reader=%04u,strength=%u,sequence=0x%08X] ",
-                         tag_id, reader_id, tag_strength, tag->sequence);
-                hex_dump (&env, 0, sizeof (env));
-#endif
             }
 
             /* get time difference since last run */
