@@ -7,3 +7,22 @@ sudo apt-get install libjson-c-dev
 //Start/stop of mongodb server
 sudo service mongodb start
 sudo service mongodb stop
+
+Installation of mongodb server in Mac - WIP
+brew install mongodb
+//Start/stop of mongodb server
+brew services start mongodb
+brew services stop mongodb
+//Installation of json binaries for the compilation
+brew install json-c
+brew install jsoncpp
+brew install libjson
+brew install libjson-rpc-cpp
+//Fixing the compilation error of filter-mongodb
+//change the below construct into 2 lines as the function doesn't exist
+//mongodb_store(mongo_db,"tag",json_object_object_get(json, "tag"),i);
+json_object_object_get_ex(json, "tag", &val_tag); //declare val_tag as json_object : json_object *val_tag, *val_edge;
+mongodb_store(mongo_db,"tag",val_tag,i);
+
+// TCP dump command for Mac
+sudo /usr/sbin/tcpdump -s0 -X -p -i en4 port 2342 and udp
