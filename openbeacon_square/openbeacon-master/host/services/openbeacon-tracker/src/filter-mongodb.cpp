@@ -51,7 +51,7 @@
 #include <getopt.h>
 #include <stdio.h>
 #include <mongo.h>
-#include <json/json.h>
+#include <json-c/json.h> //to fix compilation error on linux
 
 #define LOG "FILTER_MONGODB "
 
