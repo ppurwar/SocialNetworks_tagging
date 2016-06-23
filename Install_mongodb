@@ -1,0 +1,9 @@
+Installation of mongodb server in Linux
+
+sudo apt-get install mongodb-server
+//libjson for the compilation of filter mongodb
+sudo apt-get install libjsoncpp-dev
+sudo apt-get install libjson-c-dev
+//Start/stop of mongodb server
+sudo service mongodb start
+sudo service mongodb stop
