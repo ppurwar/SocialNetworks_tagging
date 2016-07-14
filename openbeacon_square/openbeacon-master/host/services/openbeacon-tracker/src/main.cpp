@@ -52,6 +52,7 @@ static bool g_first;
 
 #define XXTEA_KEY_NONE 0
 
+#define TAG_TIMINGS
 #define READER_UPDATE //flag for reader firmware update
 //#define PPDBG  //for debugging
 
@@ -101,13 +102,22 @@ static uint8_t g_decrypted_one;
 #define TAG_MASS 1.0
 
 #define PROXAGGREGATION_TIME_SLOT_SECONDS 2
+#ifdef TAG_TIMINGS
+#define PROXAGGREGATION_TIME_SLOTS 5
+#else
 #define PROXAGGREGATION_TIME_SLOTS 10
+#endif
 #define PROXAGGREGATION_TIME (PROXAGGREGATION_TIME_SLOT_SECONDS*PROXAGGREGATION_TIME_SLOTS)
 
 #define MIN_AGGREGATION_SECONDS 5
 #define MAX_AGGREGATION_SECONDS 16
+#ifdef TAG_TIMINGS
+#define RESET_TAG_POSITION_SECONDS 10
+#define READER_TIMEOUT_SECONDS 30
+#else
 #define RESET_TAG_POSITION_SECONDS (60*5)
 #define READER_TIMEOUT_SECONDS (60*15)
+#endif
 #define PACKET_STATISTICS_WINDOW 10
 #define PACKET_STATISTICS_READER 15
 #define AGGREGATION_TIMEOUT(strength) ((uint32_t)(MIN_AGGREGATION_SECONDS+(((MAX_AGGREGATION_SECONDS-MIN_AGGREGATION_SECONDS)/(STRENGTH_LEVELS_COUNT-1))*(strength))))
@@ -973,7 +983,6 @@ parse_packet (double timestamp, uint32_t reader_id, const void *data, int len,
                     fprintf (stderr, "new tag %8u [key=%u] seen\n", tag_id,
                              key_id);
                     tag->id = tag_id;
-                    fprintf (stdout, "check1 tag %8u \n", tag_id);
                     tag->key_id = key_id;
                     tag->last_calculated = timestamp;
                     tag->last_reader_statistics = timestamp;
