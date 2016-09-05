@@ -24,6 +24,9 @@
 #ifndef __OPENBEACON_H__
 #define __OPENBEACON_H__
 
+#define READER_UPDATE //flag for reader firmware update
+#define TAG_UPDATE
+
 #define CONFIG_TRACKER_CHANNEL 81
 #define CONFIG_PROX_CHANNEL 76
 

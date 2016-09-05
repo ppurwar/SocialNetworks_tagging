@@ -1,3 +1,43 @@
+Final tasks:
+
+Galluszentrum 
+
+1. Visit on friday : 10.40 am (tentative) 
+2. Take all readers for range check
+3. Make list of equipments (cable, switches). bring tape - Prateek
+4. Match - batch id, student id, study id.
+5. Size - 80
+
+On site: 
+1. measure cable length required
+2. add reader details in software code
+
+
+
+Kilcheberg
+
+1. Size - 40
+
+
+
+
+
+
+
+
+
+
+Discuss on:
+1. Data format for final output
+2. LAN support ? or visit to site
+3. Battery order 
+
+4. Update on pickit2 
+
+
+
+
+
 23.03.2016
 
 Program the tags first.
