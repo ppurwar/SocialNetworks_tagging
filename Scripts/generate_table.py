@@ -42,7 +42,7 @@ def convert_to_hh_mm_ss(time_format):
 # 2 : Only Deletion is performed on data for the interactions less than value specified to variable deletion_time 
 # 3 : Only Merge operation performed on data for the interactions less than value specified to variable merge_time
 # 4 : Both Merge, delete & Ties creation operation performed on data for the interactions less than value specified to variables deletion_time and merge_time
-# 5 : Both Merge, delete & Ties creation & "Final merge" after Ties creation operation performed on data for the interactions less than value specified to variables deletion_time and merge_time
+# 5 : Both Merge, delete & Artificial Ties creation operation performed on data based on values specified to variables deletion_time and merge_time. Again another "Final merge" is performed on created and observed ties. In the case where they overlap, then a new merged Tie replaces the observed and created tie and is labelled as "Mixed" Tie.
 select_option=4
 
 # Variables to control the delete and merge time
@@ -623,7 +623,8 @@ elif(select_option==4 or select_option==5):
 # To write to csv file final list of interactions
 #######################################################
 
-csvFile = open('Final_Tags_Interation_table.csv', 'w')
+filename_csv='Edges_Pharma_Interation_table'+'_deltime_'+str(deletion_time)+'sec'+'_mergetime_'+str(merge_time)+'sec'+'_option_'+str(select_option)+'.csv'
+csvFile = open(filename_csv, 'w')
 csvWriter = csv.writer(csvFile, delimiter=',', lineterminator='\n')
 csvWriter.writerow(['Start Time','Interaction system start time','Tag A','Tag B','End Time','Interaction system end time','Interaction observed/created','Created triad closure'])
 
