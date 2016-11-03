@@ -260,7 +260,6 @@ list_of_interactions = sorted(list_of_interactions)
 #    csvWriter.writerow([start_time_hh_mm_ss,time_val_start,list_index[1],list_index[2],end_time_hh_mm_ss,time_val_end])
 #                
 ###print "count",count
-##workbook.close()
 #csvFile.close()
 
 ##print "introduce the consider and merge time"
