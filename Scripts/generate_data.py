@@ -8,23 +8,19 @@ import json
 import time
 import re
 import glob
-import numpy as np
-import xlsxwriter
 import csv
 
 ## Excel file name to save the data
-#workbook = xlsxwriter.Workbook('Tags_Interation_data.xlsx')
-#worksheet = workbook.add_worksheet()
-
 csvFile = open('Tags_Interation_data.csv', 'w')
 csvWriter = csv.writer(csvFile, delimiter=',', lineterminator='\n')
 #csvWriter = csv.writer(csvFile, lineterminator='\n')
+   
 
 count=0
 ##Sheet to save Excel file
 csvWriter.writerow(['ID','Time','Tags','Intensity'])
 
-for filename in glob.iglob('mod*.json'):
+for filename in glob.iglob('*.json'):
     print filename
     print "count",count
     data_file = open(filename).read()    
@@ -48,11 +44,6 @@ for filename in glob.iglob('mod*.json'):
                 #print "power:",edge_key['power']
                 count=count+1
                 csvWriter.writerow([key['id'],time_final,edge_key['tag'],edge_key['power']])
-                #worksheet.write(count, 0, key['id'])
-                #worksheet.write(count, 1, time_final)
-                #worksheet.write(count, 2, str(edge_key['tag']))
-                #worksheet.write(count, 3, str(edge_key['power']))
     
 print "count",count
-#workbook.close()
 csvFile.close()
