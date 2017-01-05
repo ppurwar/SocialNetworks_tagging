@@ -1,0 +1,15 @@
+ reader 1298: ping 172.30.128.123
+sudo tcpdump -s0 -X -p -i eth0 port 2342 and udp
+
+sudo tcpdump -s 65535 -i eth0 port 2342 and udp -w debug.pcap
+
+
+rotating with timestamps
+
+Rotating capture files with a timestamp is a very simple and convenient solution. Using the -G option, you can specify after how many seconds tcpdump should open a new capture file.
+With -G present, the -w option now accepts strftime-placeholders (like %H for hour, %M for minute and so on) so you can name the file like the current date.
+
+to record: sudo tcpdump -p -i eth0 -s65535 -G 1800 -w 'trace_%Y_%m_%d_%H_%M_%S.pcap'
+
+to read: sudo tcpdump -x -r filename.pcap
+         Or read using ./openbeacon-tracker filename.pcap
