@@ -1,1 +1,6 @@
-./openbeacon-tracker | split -b 1000 &
+To execute:
+  ./openbeacon-tracker | split -b 1000 &
+Once execution completed, search for the process id:
+  ps -aux | grep split
+End that process using:
+  kill $process_id
