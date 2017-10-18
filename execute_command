@@ -1,0 +1,1 @@
+./openbeacon-tracker | split -b 1000 &
